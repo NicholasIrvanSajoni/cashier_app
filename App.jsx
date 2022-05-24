@@ -5,6 +5,13 @@ import useCachedResources from './hooks/useCachedResources';
 import useColorScheme from './hooks/useColorScheme';
 import Navigation from './navigation';
 
+import axios from "axios";
+import secret from "./constants/Secret";
+import UserContextProvider from './context/user-context-provider';
+
+axios.defaults.baseURL = secret.APIURL
+
+
 export default function App() {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
@@ -14,8 +21,10 @@ export default function App() {
   } else {
     return (
       <SafeAreaProvider>
-        <Navigation colorScheme={colorScheme} />
-        <StatusBar />
+        <UserContextProvider>
+          <Navigation colorScheme={colorScheme} />
+          <StatusBar />
+        </UserContextProvider>
       </SafeAreaProvider>
     );
   }

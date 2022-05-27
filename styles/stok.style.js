@@ -1,45 +1,45 @@
-import { StyleSheet } from 'react-native'
-import colors from '../constants/Colors';
+import { StyleSheet } from "react-native"
+import colors from "../constants/Colors"
 
 const stokStyle = StyleSheet.create({
     actionbar: {
         paddingBottom: 20,
         flex: 1,
-        flexDirection: 'row'
+        flexDirection: "row",
     },
 
     searchprodukbar: {
-        width: "90%"
+        width: "90%",
     },
 
     iconfilterbox: {
         width: "15%",
-        paddingTop: 7
+        paddingTop: 7,
     },
 
     iconfilter: {
         width: 35,
         height: 35,
-        alignSelf: 'center',
+        alignSelf: "center",
     },
 
     home: {
-        width: '100%',
-        height: '100%',
-        backgroundColor: colors.white
+        width: "100%",
+        height: "100%",
+        backgroundColor: colors.white,
     },
 
     header: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
         paddingVertical: 15,
-        backgroundColor: colors.lightgreen
+        backgroundColor: colors.lightgreen,
     },
 
     leftheader: {
         flex: 1,
-        left: 15
+        left: 15,
     },
 
     rightheader: {
@@ -48,59 +48,58 @@ const stokStyle = StyleSheet.create({
 
     titlecart: {
         flex: 1,
-        alignSelf: 'center',
-        justifyContent: 'center',
-        width: '100%',
-        paddingRight: '10%'
+        alignSelf: "center",
+        justifyContent: "center",
+        width: "100%",
+        paddingRight: "10%",
     },
 
     headertext: {
         fontSize: 20,
-        fontWeight: '900',
+        fontWeight: "900",
         color: colors.black,
-        alignSelf: 'center',
-        justifyContent: 'center'
+        alignSelf: "center",
+        justifyContent: "center",
     },
 
     content: {
         padding: 20,
-        height: '100%'
+        height: "100%",
     },
 
     tabbar: {
-        backgroundColor: colors.white
+        backgroundColor: colors.white,
     },
 
     label: {
-        color: colors.lightorange
+        color: colors.lightorange,
     },
 
     container_2: {
-        width: '100%'
+        width: "100%",
     },
 
     box_image: {
         paddingHorizontal: 20,
-        paddingTop: 20
+        paddingTop: 20,
     },
     product_image: {
-        alignSelf: 'center',
-        resizeMode: 'cover',
-        width: '100%',
+        alignSelf: "center",
+        resizeMode: "cover",
+        width: "100%",
     },
 
     box_info: {
-        textAlign: 'center',
+        textAlign: "center",
         fontSize: 25,
         paddingHorizontal: 20,
-        paddingTop: 5
+        paddingTop: 5,
     },
-
 
     kategoricard: {
         marginBottom: 20,
         flex: 1,
-        flexDirection: 'row',
+        flexDirection: "row",
     },
 
     kategoritext: {
@@ -108,7 +107,7 @@ const stokStyle = StyleSheet.create({
     },
 
     kategoribox: {
-        paddingRight: 10
+        paddingRight: 10,
     },
 
     // Item Stok
@@ -116,7 +115,7 @@ const stokStyle = StyleSheet.create({
     itemcartboximage: {
         paddingVertical: 10,
         paddingLeft: 15,
-        paddingRight: 5
+        paddingRight: 5,
     },
 
     itemcartimage: {
@@ -127,35 +126,63 @@ const stokStyle = StyleSheet.create({
     },
 
     boxitem: {
-        flexDirection: 'row',
+        flexDirection: "row",
         borderWidth: 2,
         borderColor: colors.black,
-        flexWrap: 'wrap',
+        flexWrap: "wrap",
         paddingBottom: 5,
     },
 
     deskripsiitem: {
         padding: 6,
-        width: '50%'
+        width: "50%",
     },
 
     trashiconbox: {
         padding: 6,
-        marginLeft: 'auto'
+        marginLeft: "auto",
     },
 
     textharga: {
-        fontSize: 20
+        fontSize: 20,
     },
 
     checkcart: {
-        paddingTop: 30
+        paddingTop: 30,
     },
 
     btnincdec: {
-        paddingTop: 5
+        paddingTop: 5,
     },
 
+    modaltambahkategori: {
+        // position: "absolute",
+        alignSelf: "center",
+        // alignContent: "center",
+        // width: "75%",
+        // height: "auto",
+        // height: Dimensions.get('window').width / 2,
+        // width: Dimensions.get('window').height / 2,
+        // top: "35%",
+        // zIndex: 5,
+        backgroundColor: colors.white,
+        borderWidth: 3,
+        borderColor: colors.lightblue,
+        borderRadius: 5,
+        paddingBottom: 20,
+    },
+
+    modalpembelian: {
+        // position: "absolute",
+        alignSelf: "center",
+        // alignContent: "center",
+        height: "100%",
+        width: "100%",
+        zIndex: 5,
+        backgroundColor: colors.white,
+        borderWidth: 3,
+        borderColor: colors.lightblue,
+    },
 })
 
-export default stokStyle;
+export default stokStyle

@@ -1,11 +1,11 @@
-import { StyleSheet, Dimensions } from 'react-native'
-import colors from '../constants/Colors';
+import { StyleSheet, Dimensions } from "react-native"
+import colors from "../constants/Colors"
 
 const productStyle = StyleSheet.create({
     actionbar: {
         paddingBottom: 10,
         flex: 1,
-        flexDirection: 'row'
+        flexDirection: "row",
     },
 
     itemss: {
@@ -13,46 +13,45 @@ const productStyle = StyleSheet.create({
         fontSize: 18,
         height: 44,
         borderColor: colors.black,
-        borderBottomWidth: 5
+        borderBottomWidth: 5,
     },
 
     searchprodukbar: {
-        width: "90%"
+        width: "90%",
     },
 
     iconfilterbox: {
         width: "15%",
-        paddingTop: 7
+        paddingTop: 7,
     },
 
     iconfilter: {
         width: 35,
         height: 35,
-        alignSelf: 'center',
+        alignSelf: "center",
     },
 
     home: {
-        width: '100%',
-        height: '100%',
-        backgroundColor: colors.white
+        width: "100%",
+        height: "100%",
+        backgroundColor: colors.white,
     },
 
     Searchbarstyle: {
-        width: "100%"
+        width: "100%",
     },
 
-
     header: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
         paddingVertical: 15,
-        backgroundColor: colors.lightgreen
+        backgroundColor: colors.lightgreen,
     },
 
     leftheader: {
         flex: 1,
-        left: 15
+        left: 15,
     },
 
     rightheader: {
@@ -61,55 +60,54 @@ const productStyle = StyleSheet.create({
 
     titlecart: {
         flex: 1,
-        alignSelf: 'center',
-        justifyContent: 'center',
-        width: '100%',
-        paddingRight: '10%'
+        alignSelf: "center",
+        justifyContent: "center",
+        width: "100%",
+        paddingRight: "10%",
     },
 
     headertext: {
         fontSize: 20,
-        fontWeight: '900',
+        fontWeight: "900",
         color: colors.black,
-        alignSelf: 'center',
-        justifyContent: 'center'
+        alignSelf: "center",
+        justifyContent: "center",
     },
 
     content: {
-        padding: 20
+        padding: 20,
     },
 
     container_2: {
-        width: '100%'
+        width: "100%",
     },
 
     box_image: {
         paddingHorizontal: 20,
-        paddingTop: 20
+        paddingTop: 20,
     },
     product_image: {
-        alignSelf: 'center',
-        resizeMode: 'cover',
-        width: '100%'
+        alignSelf: "center",
+        resizeMode: "cover",
+        width: "100%",
     },
 
     box_info: {
-        textAlign: 'center',
+        textAlign: "center",
         fontSize: 25,
         paddingHorizontal: 20,
-        paddingTop: 5
+        paddingTop: 5,
     },
-
 
     kategoricard: {
         marginBottom: 20,
         flex: 1,
-        flexDirection: 'row',
+        flexDirection: "row",
     },
 
     kategoritext: {
         borderColor: colors.lightblue,
-        borderWidth: 1
+        borderWidth: 1,
     },
 
     kategoribox: {
@@ -117,24 +115,22 @@ const productStyle = StyleSheet.create({
     },
 
     closebutton: {
-        position: 'absolute',
+        position: "absolute",
         left: 0,
         right: 0,
         top: 0,
-        bottom: 0
-
+        bottom: 0,
     },
 
     menukategori: {
-        paddingBottom: 5
+        paddingBottom: 5,
     },
 
     addkategoritext: {
         borderWidth: 1,
         borderColor: colors.lightblue,
-        borderStyle: 'dashed',
+        borderStyle: "dashed",
     },
-
 
     item: {
         // Just for visual representation:
@@ -148,58 +144,53 @@ const productStyle = StyleSheet.create({
 
         // Important styles:
         marginRight: 20,
-        flexBasis: '43%',
+        flexBasis: "43%",
         flexGrow: 1,
         marginBottom: 25,
     },
 
-
     container: {
         // Important styles:
         marginRight: -20,
-        flexDirection: 'row',
-        flexWrap: 'wrap',
+        flexDirection: "row",
+        flexWrap: "wrap",
     },
 
     // Round Button
     btn_round: {
         borderWidth: 1,
-        borderColor: 'rgba(0,0,0,0.2)',
-        alignItems: 'center',
-        justifyContent: 'center',
+        borderColor: "rgba(0,0,0,0.2)",
+        alignItems: "center",
+        justifyContent: "center",
         width: 70,
         height: 70,
         backgroundColor: colors.lightgreen,
         borderRadius: 50,
-        marginLeft: 'auto',
-
-    },
-
-    btn_round_box: {
-        paddingRight: 15,
-        paddingBottom: 20
+        position: "absolute",
+        bottom: 5,
+        right: 5,
     },
 
     btn_round_icon: {
-        width: 60
+        width: 60,
     },
 
     // Modal Tambah Kategori
     modaltambahkategori: {
         position: "absolute",
         alignSelf: "center",
-        alignContent: 'center',
-        width: '75%',
-        height: 'auto',
+        alignContent: "center",
+        width: "75%",
+        height: "auto",
         // height: Dimensions.get('window').width / 2,
         // width: Dimensions.get('window').height / 2,
-        top: '35%',
+        top: "35%",
         zIndex: 5,
         backgroundColor: colors.white,
         borderWidth: 3,
         borderColor: colors.lightblue,
         borderRadius: 5,
-        paddingBottom: 20
+        paddingBottom: 20,
     },
 
     boxinput: {
@@ -210,9 +201,9 @@ const productStyle = StyleSheet.create({
     modalpembelian: {
         position: "absolute",
         alignSelf: "center",
-        alignContent: 'center',
-        height: '100%',
-        width: '100%',
+        alignContent: "center",
+        height: "100%",
+        width: "100%",
         zIndex: 5,
         backgroundColor: colors.white,
         borderWidth: 3,
@@ -220,9 +211,9 @@ const productStyle = StyleSheet.create({
     },
 
     modalheader: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
         paddingVertical: 12,
         backgroundColor: colors.lightgreen,
     },
@@ -230,21 +221,20 @@ const productStyle = StyleSheet.create({
     titlemodal: {
         flex: 1,
         left: 15,
-
     },
 
     modaladdpembelian: {
-        paddingHorizontal: 15
+        paddingHorizontal: 15,
     },
 
     rightheadermodal: {
         flex: 1,
         right: 10,
-        justifyContent: 'center',
+        justifyContent: "center",
     },
 
     boxmodaltambahpembelian: {
-        paddingTop: 5
+        paddingTop: 5,
     },
 
     modalselectinput: {
@@ -254,33 +244,33 @@ const productStyle = StyleSheet.create({
     },
 
     boxheight: {
-        paddingTop: 5
+        paddingTop: 5,
     },
 
     modaljumlahpembelianproduk: {
-        flexDirection: 'row',
-        justifyContent: 'space-between'
+        flexDirection: "row",
+        justifyContent: "space-between",
     },
 
     modaljmlhproduk: {
-        width: '45%'
+        width: "45%",
     },
 
     modaljnsproduk: {
-        width: '45%'
+        width: "45%",
     },
 
     modalhargapembelianproduk: {
-        flexDirection: 'row',
-        justifyContent: 'space-between'
+        flexDirection: "row",
+        justifyContent: "space-between",
     },
 
     modalhargasatuanproduk: {
-        width: '45%'
+        width: "45%",
     },
 
     modalhargatotalproduk: {
-        width: '45%'
+        width: "45%",
     },
 
     image_calendar: {
@@ -289,9 +279,9 @@ const productStyle = StyleSheet.create({
     },
 
     modaliconcalendar: {
-        marginRight: 'auto',
+        marginRight: "auto",
         paddingLeft: 10,
-        marginTop: 'auto',
+        marginTop: "auto",
     },
 
     modalinputtanggalcalendar: {
@@ -299,12 +289,12 @@ const productStyle = StyleSheet.create({
         borderColor: colors.black,
         marginTop: 5,
         height: 25,
-        justifyContent: 'center',
-        paddingLeft: 5
+        justifyContent: "center",
+        paddingLeft: 5,
     },
 
     boxiconcalendar: {
-        marginTop: 10
+        marginTop: 10,
     },
 
     btn_save: {
@@ -314,12 +304,12 @@ const productStyle = StyleSheet.create({
     // Test
     itempenjualan: {
         flex: 1,
-        backgroundColor: 'white',
-        marginTop: 5
+        backgroundColor: "white",
+        marginTop: 5,
     },
 
     itemcartboximage: {
-        width: '25%',
+        width: "25%",
         padding: 10,
     },
 
@@ -328,28 +318,28 @@ const productStyle = StyleSheet.create({
         height: 70,
         borderWidth: 1,
         borderColor: colors.black,
-        resizeMode: 'cover',
+        resizeMode: "cover",
     },
 
     icon_produk: {
         width: 25,
         height: 25,
-        marginLeft: 'auto',
-        paddingLeft: 10
+        marginLeft: "auto",
+        paddingLeft: 10,
     },
 
     box_icon_produk: {
-        width: 'auto',
+        width: "auto",
         paddingTop: 6,
-        marginLeft: 'auto',
-        paddingRight: 10
+        marginLeft: "auto",
+        paddingRight: 10,
     },
 
     boxitem: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
+        flexDirection: "row",
+        flexWrap: "wrap",
         borderBottomWidth: 2,
-        borderColor: colors.lightblue
+        borderColor: colors.lightblue,
     },
 
     boxshowproduk: {
@@ -359,71 +349,108 @@ const productStyle = StyleSheet.create({
 
     deskripsiitem: {
         paddingTop: 6,
-        width: '45%',
+        width: "45%",
     },
 
     texthargacolor: {
         fontSize: 16,
-        fontWeight: 'bold',
+        fontWeight: "bold",
         backgroundColor: colors.lightgreen,
         paddingHorizontal: 5,
-        marginTop: 3
+        marginTop: 3,
     },
 
     checkcart: {
-        paddingTop: 30
+        paddingTop: 30,
     },
 
     transaksi_total: {
-        marginLeft: 'auto',
-
+        marginLeft: "auto",
     },
 
     transaksi_harga: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop: 3
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginTop: 3,
     },
 
-    transaksi_satuan: {
-
-    },
+    transaksi_satuan: {},
 
     transaksivariasi: {
-        flexDirection: 'row',
-        marginTop: 3
+        flexDirection: "row",
+        marginTop: 3,
     },
 
     transaksivariasipembelian: {
-        flexDirection: 'row',
-        marginTop: 5
+        flexDirection: "row",
+        marginTop: 5,
     },
 
     transaksi_jenis_jumlah: {
-        flexDirection: 'row',
-        marginTop: 5
+        flexDirection: "row",
+        marginTop: 5,
     },
 
     jenisvariasi: {
-        flexShrink: 1
+        flexShrink: 1,
     },
 
     textboldcolor: {
         backgroundColor: colors.lightgreen,
-        fontWeight: 'bold',
-        width: 'auto',
-        paddingHorizontal: 5
-
+        fontWeight: "bold",
+        width: "auto",
+        paddingHorizontal: 5,
     },
 
     textbold: {
-        fontWeight: 'bold'
+        fontWeight: "bold",
     },
 
     tanggalbold: {
         fontSize: 12,
-        fontWeight: 'bold'
+        fontWeight: "bold",
+    },
+
+    // placeholder: {
+    //     height: 50,
+    //     width: "100%",
+    //     color: "grey", // PLACE HOLDER COLOR
+    // },
+
+    pickers: {
+        height: 50,
+        width: "100%",
+        color: "blue", // VALUE COLOR
+    },
+
+    btn_del: {
+        marginTop: 10,
+        flexBasis: "47.5%",
+    },
+
+    action_delete: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+    },
+
+    title_delete: {
+        fontWeight: "bold",
+        fontSize: 18,
+    },
+
+    content_delete: {
+        fontWeight: "bold",
+        fontSize: 16,
+        textAlign: "center",
+        color: "red",
+        lineHeight: 22,
+    },
+
+    intro_delete: {
+        fontWeight: "bold",
+        textAlign: "center",
+        fontSize: 14,
     },
 })
 
-export default productStyle;
+export default productStyle

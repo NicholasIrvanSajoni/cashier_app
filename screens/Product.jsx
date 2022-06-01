@@ -48,7 +48,25 @@ const Product = ({ navigation }) => {
     const [ShowEditProduk, setShowEditProduk] = useState(false)
     // Detail Produk
     const [DataProdukByIDProduk, setDataProdukByIDProduk] = useState()
-    // Delete Produk
+    const [DataDetailProduk, setDataDetailProduk] = useState()
+
+    // Create Jenis Produk
+    const [ShowCreateJenisProduk, setShowCreateJenisProduk] = useState(false)
+    const [InputNamaJenisProduk, setInputNamaJenisProduk] = useState("")
+    const [InputJumlahJenisProduk, setInputJumlahJenisProduk] = useState("")
+    const [InputHargaJenisProduk, setInputHargaJenisProduk] = useState("")
+
+    // Edit Jenis Produk
+    const [ShowEditJenisProduk, setShowEditJenisProduk] = useState(false)
+    const [NamaJenisProduk, setNamaJenisProduk] = useState("")
+    const [JumlahJenisProduk, setJumlahJenisProduk] = useState("")
+    const [HargaJenisProduk, setHargaJenisProduk] = useState("")
+    const [IDJenisProduk, setIDJenisProduk] = useState("")
+    const [IDProduk, setIDProduk] = useState("")
+
+    // Delete Jenis Produk
+    const [ShowDeleteJenisProduk, setShowDeleteJenisProduk] = useState(false)
+    const [DeleteIDJenisProduk, setDeleteIDJenisProduk] = useState("")
 
     // Image
     const [image, setImage] = useState(null)
@@ -86,6 +104,7 @@ const Product = ({ navigation }) => {
     useEffect(() => {
         fetchKategori()
         fetchprodukallkategori()
+        fetchjenisproduk()
     }, [])
 
     useEffect(() => {}, [])
@@ -148,6 +167,21 @@ const Product = ({ navigation }) => {
         }
     }
 
+    const fetchjenisproduk = async (id_produk) => {
+        try {
+            const getjenisproduk = (
+                await axios.get(`/jenisproduk/produk/${id_produk}`)
+            ).data
+            // console.log(getkategoriproduk.data[1].id_kategori);
+            // console.log(getkategoriproduk)
+            setDataDetailProduk(getjenisproduk.data)
+            console.log(DataDetailProduk)
+        } catch (error) {
+            setDataDetailProduk([])
+            console.log(error.response.data)
+        }
+    }
+
     const handlerCreateProduk = async () => {
         // console.log(NamaProduk);
         // console.log(KategoriProduk);
@@ -193,6 +227,35 @@ const Product = ({ navigation }) => {
         }
     }
 
+    const handlerCreateJenisProduk = async () => {
+        try {
+            const tambahktgr = (
+                await axios.post(
+                    "/jenisproduk",
+                    {
+                        nama_jenis_produk: InputNamaJenisProduk,
+                        jumlah_produk: InputJumlahJenisProduk,
+                        harga_produk: InputHargaJenisProduk,
+                        id_produk: IDProduk,
+                    },
+                    {
+                        headers: {
+                            Authorization: "bearer " + usercontext.token,
+                        },
+                    },
+                )
+            ).data
+            console.log(tambahktgr)
+            fetchjenisproduk(IDProduk)
+            setInputNamaJenisProduk("")
+            setInputJumlahJenisProduk("")
+            setInputHargaJenisProduk("")
+            setShowCreateJenisProduk(false)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     const handleSubmit = () => {
         // dari handleValidation() ngembaliin nilai true / false, kalau true jalanin handlerCreateProduk()
 
@@ -226,6 +289,44 @@ const Product = ({ navigation }) => {
             // console.log(getkategoriproduk.data[1].id_kategori);
             console.log(deleteproduk)
             fetchprodukallkategori()
+        } catch (error) {
+            console.log(error.response.data)
+        }
+    }
+
+    const handlerEditJenisProduk = async (id_jenis_produk) => {
+        try {
+            const edit_jenis_produk = await axios.put(
+                `/jenisproduk/${id_jenis_produk}`,
+                {
+                    nama_jenis_produk: NamaJenisProduk,
+                    jumlah_produk: JumlahJenisProduk,
+                    harga_produk: HargaJenisProduk,
+                },
+                {
+                    headers: {
+                        Authorization: "bearer " + usercontext.token,
+                    },
+                },
+            ).data
+            console.log(edit_jenis_produk)
+            setShowEditJenisProduk(false)
+            fetchjenisproduk(IDProduk)
+        } catch (error) {}
+    }
+
+    const handlerDeleteJenisProduk = async (id_jenis_produk) => {
+        try {
+            const deleteproduk = (
+                await axios.delete(`/jenisproduk/${id_jenis_produk}`, {
+                    headers: {
+                        Authorization: "bearer " + usercontext.token,
+                    },
+                })
+            ).data
+            // console.log(getkategoriproduk.data[1].id_kategori);
+            console.log(deleteproduk)
+            fetchjenisproduk(IDProduk)
         } catch (error) {
             console.log(error.response.data)
         }
@@ -312,7 +413,7 @@ const Product = ({ navigation }) => {
                     <View style={productStyle.boxshowproduk}>
                         {DataListProduk?.map((listproduk) => (
                             <View
-                                style={productStyle.boxitem}
+                                style={productStyle.edit_box_product}
                                 key={listproduk.id_produk}
                             >
                                 <View style={productStyle.itemcartboximage}>
@@ -364,6 +465,10 @@ const Product = ({ navigation }) => {
                                             fetchprodukbyid(
                                                 listproduk.id_produk,
                                             )
+                                            fetchjenisproduk(
+                                                listproduk.id_produk,
+                                            )
+                                            setIDProduk(listproduk.id_produk)
                                         }}
                                     >
                                         Edit
@@ -569,15 +674,151 @@ const Product = ({ navigation }) => {
 
                     {DataProdukByIDProduk?.map((dataproduk) => (
                         <View key={dataproduk.id_produk}>
-                            <View style={productStyle.itemcartboximage}>
-                                <Image
-                                    style={productStyle.itemcartimage}
-                                    source={{
-                                        uri: `http://localhost:4000/${dataproduk.link_foto_produk}`,
-                                    }}
-                                ></Image>
+                            <View style={productStyle.boxitem}>
+                                <View style={productStyle.edit_image_box}>
+                                    <Image
+                                        style={productStyle.edit_product_image}
+                                        source={{
+                                            uri: `http://localhost:4000/${dataproduk.link_foto_produk}`,
+                                        }}
+                                    ></Image>
+                                </View>
+                                <View style={productStyle.edit_product_desc}>
+                                    <View>
+                                        <Text
+                                            style={
+                                                productStyle.text_edit_desc_product
+                                            }
+                                            numberOfLines={3}
+                                        >
+                                            {dataproduk.nama_produk}
+                                        </Text>
+                                        <Text>
+                                            Kategori :{" "}
+                                            {dataproduk.nama_kategori}
+                                        </Text>
+                                    </View>
+                                </View>
                             </View>
-                            <Text>{dataproduk.nama_produk}</Text>
+                            <View style={productStyle.box_btn_add}>
+                                <TouchableOpacity
+                                    style={productStyle.btn_add}
+                                    onPress={() =>
+                                        setShowCreateJenisProduk(true)
+                                    }
+                                >
+                                    <Text>Tambah Jenis Produk</Text>
+                                </TouchableOpacity>
+                            </View>
+
+                            <View style={productStyle.detail_jenis_produk}>
+                                <View style={productStyle.detail_head1}>
+                                    <Text>Jenis Produk</Text>
+                                </View>
+                                <View style={productStyle.detail_head1}>
+                                    <Text>Stok</Text>
+                                </View>
+                                <View style={productStyle.detail_head2}>
+                                    <Text>Harga</Text>
+                                </View>
+                                <View style={productStyle.detail_head1}>
+                                    <Text>Action</Text>
+                                </View>
+                            </View>
+                            {DataDetailProduk?.map((detail_jenis_produk) => (
+                                <View key={detail_jenis_produk.id_jenis_produk}>
+                                    <View
+                                        style={
+                                            productStyle.detail_value_jenis_produk
+                                        }
+                                    >
+                                        <View style={productStyle.detail_head1}>
+                                            <Text>
+                                                {
+                                                    detail_jenis_produk.nama_jenis_produk
+                                                }
+                                            </Text>
+                                        </View>
+                                        <View style={productStyle.detail_head1}>
+                                            <Text>
+                                                {
+                                                    detail_jenis_produk.jumlah_produk
+                                                }
+                                            </Text>
+                                        </View>
+                                        <View style={productStyle.detail_head2}>
+                                            <Text>
+                                                Rp.
+                                                {
+                                                    detail_jenis_produk.harga_produk
+                                                }
+                                            </Text>
+                                        </View>
+                                        <View style={productStyle.detail_head1}>
+                                            <View
+                                                style={
+                                                    productStyle.box_action_kategori
+                                                }
+                                            >
+                                                <TouchableOpacity
+                                                    style={
+                                                        productStyle.box_icon_kategori
+                                                    }
+                                                    onPress={() => {
+                                                        setDisabled(true)
+                                                        setShowEditJenisProduk(
+                                                            true,
+                                                        )
+                                                        setNamaJenisProduk(
+                                                            detail_jenis_produk.nama_jenis_produk,
+                                                        )
+                                                        setJumlahJenisProduk(
+                                                            detail_jenis_produk.jumlah_produk,
+                                                        )
+                                                        setHargaJenisProduk(
+                                                            detail_jenis_produk.harga_produk,
+                                                        )
+                                                        setIDJenisProduk(
+                                                            detail_jenis_produk.id_jenis_produk,
+                                                        )
+                                                    }}
+                                                >
+                                                    <Image
+                                                        style={
+                                                            productStyle.icon_trash
+                                                        }
+                                                        source={require("../assets/images/Icon/edit.png")}
+                                                    ></Image>
+                                                </TouchableOpacity>
+                                                <TouchableOpacity
+                                                    style={
+                                                        productStyle.box_icon_kategori
+                                                    }
+                                                    onPress={() => {
+                                                        setDisabled(true)
+                                                        setShowDeleteJenisProduk(
+                                                            true,
+                                                        )
+                                                        setNamaJenisProduk(
+                                                            detail_jenis_produk.nama_jenis_produk,
+                                                        )
+                                                        setDeleteIDJenisProduk(
+                                                            detail_jenis_produk.id_jenis_produk,
+                                                        )
+                                                    }}
+                                                >
+                                                    <Image
+                                                        style={
+                                                            productStyle.icon_trash
+                                                        }
+                                                        source={require("../assets/images/Icon/trash.png")}
+                                                    ></Image>
+                                                </TouchableOpacity>
+                                            </View>
+                                        </View>
+                                    </View>
+                                </View>
+                            ))}
                         </View>
                     ))}
                 </View>
@@ -628,59 +869,200 @@ const Product = ({ navigation }) => {
                     </View>
                 </View>
             ) : null}
-        </View>
-        // CONTOH FLATLIST
-        // <FlatList nestedScrollEnabled
-        //         data={[
-        //             { key: 'Devin' },
-        //             { key: 'Dan' },
-        //             { key: 'Dominic' },
-        //             { key: 'Jackson' },
-        //             { key: 'James' },
-        //             { key: 'Joel' },
-        //             { key: 'John' },
-        //             { key: 'Jillian' },
-        //             { key: 'Jimmy' },
-        //             { key: 'Julie' },
-        //             { key: 'Jacksona' },
-        //             { key: 'Jamess' },
-        //             { key: 'Joeld' },
-        //             { key: 'Johfdn' },
-        //             { key: 'Jilfdlian' },
-        //             { key: 'Jimmfdy' },
-        //             { key: 'Juliefd' },
-        //             { key: 'Jacksoadn' },
-        //             { key: 'Jamesasdads' },
-        //             { key: 'Joedffl' },
-        //             { key: 'Johbcvn' },
-        //             { key: 'Jilligfdfdan' },
-        //             { key: 'Jimmbcvy' },
-        //             { key: 'Julidfge' },
 
-        //         ]}
-        //         renderItem={({ item }) => <Text style={productStyle.itemss}>{item.key}</Text>}
-        //     />
+            {ShowCreateJenisProduk ? (
+                <View style={productStyle.modaltambahkategori}>
+                    <View style={productStyle.modalheader}>
+                        <View style={productStyle.titlemodal}>
+                            <Text style={productStyle.cartheadertext}>
+                                Create Jenis Kategori
+                            </Text>
+                        </View>
+                        <TouchableOpacity
+                            onPress={() => {
+                                setShowCreateJenisProduk(false)
+                                // setInputEditKategori("")
+                            }}
+                        >
+                            <View style={productStyle.rightheadermodal}>
+                                <Image
+                                    source={require("../assets/images/Icon/close.png")}
+                                ></Image>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={productStyle.modaladdpembelian}>
+                        <Text style={productStyle.boxheight}>
+                            Nama Jenis Produk
+                        </Text>
+                        <TextInput
+                            style={productStyle.boxinput}
+                            value={InputNamaJenisProduk}
+                            mode={"flat"}
+                            // placeholder={NamaJenisProduk}
+                            onChangeText={(InputNamaJenisProduk) =>
+                                setInputNamaJenisProduk(InputNamaJenisProduk)
+                            }
+                        />
+                        <Text style={productStyle.boxheight}>
+                            Jumlah Produk
+                        </Text>
+                        <TextInput
+                            style={productStyle.boxinput}
+                            value={InputJumlahJenisProduk}
+                            keyboardType="number-pad"
+                            // placeholder={JumlahJenisProduk.toString()}
+                            mode={"flat"}
+                            onChangeText={(InputJumlahJenisProduk) =>
+                                setInputJumlahJenisProduk(
+                                    InputJumlahJenisProduk,
+                                )
+                            }
+                        />
+                        <Text style={productStyle.boxheight}>Harga Produk</Text>
+                        <TextInput
+                            style={productStyle.boxinput}
+                            value={InputHargaJenisProduk}
+                            // placeholder={HargaJenisProduk.toString()}
+                            keyboardType="number-pad"
+                            mode={"flat"}
+                            onChangeText={(InputHargaJenisProduk) =>
+                                setInputHargaJenisProduk(InputHargaJenisProduk)
+                            }
+                        />
+                        <Button
+                            style={productStyle.btn_login}
+                            mode="contained"
+                            onPress={() => handlerCreateJenisProduk()}
+                        >
+                            Create
+                        </Button>
+                    </View>
+                </View>
+            ) : null}
+
+            {ShowEditJenisProduk ? (
+                <View style={productStyle.modaltambahkategori}>
+                    <View style={productStyle.modalheader}>
+                        <View style={productStyle.titlemodal}>
+                            <Text style={productStyle.cartheadertext}>
+                                Edit Kategori
+                            </Text>
+                        </View>
+                        <TouchableOpacity
+                            onPress={() => {
+                                setShowEditJenisProduk(false)
+                                // setInputEditKategori("")
+                            }}
+                        >
+                            <View style={productStyle.rightheadermodal}>
+                                <Image
+                                    source={require("../assets/images/Icon/close.png")}
+                                ></Image>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={productStyle.modaladdpembelian}>
+                        <Text style={productStyle.boxheight}>
+                            Nama Jenis Produk
+                        </Text>
+                        <TextInput
+                            style={productStyle.boxinput}
+                            value={NamaJenisProduk}
+                            mode={"flat"}
+                            // placeholder={NamaJenisProduk}
+                            onChangeText={(NamaJenisProduk) =>
+                                setNamaJenisProduk(NamaJenisProduk)
+                            }
+                        />
+                        <Text style={productStyle.boxheight}>
+                            Jumlah Produk
+                        </Text>
+                        <TextInput
+                            style={productStyle.boxinput}
+                            value={JumlahJenisProduk.toString()}
+                            keyboardType="number-pad"
+                            // placeholder={JumlahJenisProduk.toString()}
+                            mode={"flat"}
+                            onChangeText={(JumlahJenisProduk) =>
+                                setJumlahJenisProduk(JumlahJenisProduk)
+                            }
+                        />
+                        <Text style={productStyle.boxheight}>Harga Produk</Text>
+                        <TextInput
+                            style={productStyle.boxinput}
+                            value={HargaJenisProduk.toString()}
+                            // placeholder={HargaJenisProduk.toString()}
+                            keyboardType="number-pad"
+                            mode={"flat"}
+                            onChangeText={(HargaJenisProduk) =>
+                                setHargaJenisProduk(HargaJenisProduk)
+                            }
+                        />
+                        <Button
+                            style={productStyle.btn_login}
+                            mode="contained"
+                            onPress={() =>
+                                handlerEditJenisProduk(IDJenisProduk)
+                            }
+                        >
+                            Edit
+                        </Button>
+                    </View>
+                </View>
+            ) : null}
+
+            {ShowDeleteJenisProduk ? (
+                <View style={productStyle.modaltambahkategori}>
+                    <View style={productStyle.modalheader}>
+                        <View>
+                            <Text style={productStyle.title_delete}>
+                                Delete Kategori
+                            </Text>
+                        </View>
+                    </View>
+                    <View style={productStyle.modaladdpembelian}>
+                        <View style={productStyle.boxmodaltambahpembelian}>
+                            <View>
+                                <Text style={productStyle.intro_delete}>
+                                    Apakah anda ingin Menghapus Jenis Produk{" "}
+                                    <Text style={productStyle.content_delete}>
+                                        {NamaJenisProduk}
+                                    </Text>{" "}
+                                    ?
+                                </Text>
+                            </View>
+
+                            <View style={productStyle.action_delete}>
+                                <Button
+                                    style={productStyle.btn_del}
+                                    mode="contained"
+                                    onPress={() =>
+                                        setShowDeleteJenisProduk(false)
+                                    }
+                                >
+                                    Tidak
+                                </Button>
+                                <Button
+                                    style={productStyle.btn_del}
+                                    mode="contained"
+                                    onPress={() => {
+                                        handlerDeleteJenisProduk(
+                                            DeleteIDJenisProduk,
+                                        )
+                                        setShowDeleteJenisProduk(false)
+                                        setDisabled(true)
+                                    }}
+                                >
+                                    Hapus
+                                </Button>
+                            </View>
+                        </View>
+                    </View>
+                </View>
+            ) : null}
+        </View>
     )
 }
 
-// const styles = StyleSheet.create({
-//     item: {
-//         // Just for visual representation:
-//         borderWidth: 2,
-//         borderColor: '#FF0000',
-//         height: 100,
-
-//         // Important styles:
-//         marginRight: 15,
-//         flexBasis: '40%',
-//         flexGrow: 1,
-//     },
-//     container: {
-//         // Important styles:
-//         marginRight: -15,
-//         flexDirection: 'row',
-//         flexWrap: 'wrap',
-//         paddingHorizontal: 15
-//     },
-// })
 export default Product

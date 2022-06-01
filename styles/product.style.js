@@ -451,6 +451,101 @@ const productStyle = StyleSheet.create({
         textAlign: "center",
         fontSize: 14,
     },
+
+    // Edit Produk
+    edit_image_box: {
+        width: "auto",
+        padding: 15,
+    },
+
+    edit_product_image: {
+        width: 125,
+        height: 125,
+        borderWidth: 1,
+        borderColor: colors.black,
+        resizeMode: "cover",
+    },
+
+    edit_product_desc: {
+        paddingTop: 10,
+        width: "60%",
+    },
+
+    edit_box_product: {
+        flexDirection: "row",
+        flexWrap: "wrap",
+        borderBottomWidth: 2,
+        borderColor: colors.lightblue,
+    },
+
+    text_edit_desc_product: {
+        fontWeight: "bold",
+        fontSize: 15,
+    },
+
+    detail_jenis_produk: {
+        marginTop: 10,
+        marginHorizontal: 15,
+        borderWidth: 2,
+        borderColor: colors.lightblue,
+        backgroundColor: colors.lightgreen,
+        flexDirection: "row",
+
+        paddingHorizontal: 10,
+        paddingVertical: 10,
+    },
+
+    detail_head1: {
+        flex: 1,
+        alignItems: "center",
+    },
+
+    detail_head2: {
+        flex: 1.25,
+        alignItems: "center",
+    },
+
+    detail_value_jenis_produk: {
+        marginHorizontal: 15,
+        borderTopWidth: 0,
+        borderWidth: 2,
+        borderColor: colors.lightblue,
+        flexDirection: "row",
+        paddingHorizontal: 10,
+        paddingVertical: 8,
+    },
+
+    icon_trash: {
+        width: 20,
+        height: 20,
+    },
+
+    box_action_kategori: {
+        flexDirection: "row",
+        alignItems: "center",
+    },
+
+    box_icon_kategori: {
+        paddingLeft: 10,
+    },
+
+    btn_login: {
+        marginTop: 15,
+    },
+
+    btn_add: {
+        fontSize: 20,
+    },
+
+    box_btn_add: {
+        marginHorizontal: 15,
+        marginTop: 10,
+        width: 200,
+        padding: 0,
+        borderWidth: 2,
+        borderColor: colors.lightblue,
+        backgroundColor: colors.lightgreen,
+    },
 })
 
 export default productStyle

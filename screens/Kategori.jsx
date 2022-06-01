@@ -401,7 +401,7 @@ const Kategori = ({ navigation }) => {
                                                             kategoriStyle.itemcartimage
                                                         }
                                                         source={{
-                                                            uri: `${secret.imageURL}${list_produk_detail_kategori.link_foto_produk}`,
+                                                            uri: `http://localhost:4000/${list_produk_detail_kategori.link_foto_produk}`,
                                                         }}
                                                     ></Image>
                                                 </View>

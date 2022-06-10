@@ -36,17 +36,28 @@ const Kasir = ({ navigation }) => {
 
     // Btn kategori
     const [DataListKategori, setDataListKategori] = useState()
+    const [KategoriClicked, setKategoriClicked] = useState(true)
 
     // Produk
     const [DataListProduk, setDataListProduk] = useState()
     const [ChooseKategori, setChooseKategori] = useState()
 
+    // Detail Produk
+    const [IDProduk, setIDProduk] = useState("")
+    const [DataDetailProduk, setDataDetailProduk] = useState()
+    const [DataProdukByID, setDataProdukByID] = useState()
+    const [HargaProduk, setHargaProduk] = useState("")
+    const [JumlahStok, setJumlahStok] = useState("")
+
     useEffect(() => {
         fetchKategori()
         fetchprodukallkategori()
-        console.log(DataListProduk)
+        // fetchDataProductByID()
+        // fetchDetailProduk()
+        // console.log(DataListProduk)
     }, [])
 
+    // Button Kategori
     const fetchKategori = async () => {
         try {
             const getkategoriproduk = (
@@ -62,7 +73,7 @@ const Kasir = ({ navigation }) => {
         }
     }
 
-    // All Kategori
+    // All Kategori -> All Product
     const fetchprodukallkategori = async () => {
         try {
             const getproduk = (
@@ -74,11 +85,12 @@ const Kasir = ({ navigation }) => {
             setChooseKategori([])
         } catch (error) {
             setDataListProduk([])
+            setChooseKategori([])
             console.log(error.response.data)
         }
     }
 
-    // Produk
+    // Product Sort By Kategori
     const fetchprodukbykategori = async (id_kategori) => {
         try {
             const getproduk = (
@@ -90,9 +102,36 @@ const Kasir = ({ navigation }) => {
             setDataListProduk([])
         } catch (error) {
             setChooseKategori([])
+            setDataListProduk([])
             console.log(error.response.data)
         }
     }
+
+    // Detail Product
+    const fetchDetailProduk = async (id_produk) => {
+        try {
+            const getdetailproduk = (
+                await axios.get(`/jenisproduk/produk/${id_produk}`)
+            ).data
+            setDataDetailProduk(getdetailproduk.data)
+            // console.log(DataDetailProduk)
+        } catch (error) {
+            setDataDetailProduk([])
+            console.log(error.response.data)
+        }
+    }
+
+    const fetchDataProductByID = async (id_produk) => {
+        try {
+            const getproductbyid = (await axios.get(`/product/${id_produk}`))
+                .data
+            setDataProdukByID(getproductbyid.data)
+            // console.log(DataProdukByID)
+        } catch (error) {
+            console.log(error.response.data)
+        }
+    }
+
     // const [isModalVisible, setModalVisible] = useState(false);
 
     // const toggleModal = () => {
@@ -155,8 +194,15 @@ const Kasir = ({ navigation }) => {
                         >
                             <TouchableOpacity style={kasirStyle.kategoribox}>
                                 <Button
-                                    style={kasirStyle.kategoritext}
-                                    onPress={() => fetchprodukallkategori()}
+                                    style={
+                                        KategoriClicked
+                                            ? kasirStyle.kategoritextclick
+                                            : kasirStyle.kategoritextunclick
+                                    }
+                                    onPress={() => {
+                                        fetchprodukallkategori()
+                                        setKategoriClicked(true)
+                                    }}
                                 >
                                     All
                                 </Button>
@@ -169,9 +215,16 @@ const Kasir = ({ navigation }) => {
                                         fetchprodukbykategori(
                                             listkategori.id_kategori,
                                         )
+                                        setKategoriClicked(false)
                                     }}
                                 >
-                                    <Button style={kasirStyle.kategoritext}>
+                                    <Button
+                                        style={
+                                            KategoriClicked
+                                                ? kasirStyle.kategoritextunclick
+                                                : kasirStyle.kategoritextclick
+                                        }
+                                    >
                                         {listkategori.nama_kategori}
                                     </Button>
                                 </TouchableOpacity>
@@ -188,9 +241,11 @@ const Kasir = ({ navigation }) => {
                             </Portal> */}
                         {DataListProduk?.map((listproduk) => (
                             <TouchableOpacity
-                                onPress={() =>
+                                onPress={() => {
                                     setShouldShowModal(!shouldShowModal)
-                                }
+                                    fetchDetailProduk(listproduk.id_produk)
+                                    fetchDataProductByID(listproduk.id_produk)
+                                }}
                                 style={kasirStyle.item_kategori}
                                 key={listproduk.id_produk}
                             >
@@ -210,9 +265,41 @@ const Kasir = ({ navigation }) => {
                                             style={kasirStyle.product_name}
                                         >
                                             {listproduk.nama_produk}
-                                            aidasda asdajdai sds dds ds dds ds
+                                            {/* aidasda asdajdai sds dds ds dds ds
                                             ds ds d sd sds ds ds ds ds ds s d ss
-                                            d ds ds ds ds ds ds ds s dsd
+                                            d ds ds ds ds ds ds ds s dsd */}
+                                        </Text>
+                                    </View>
+                                </View>
+                            </TouchableOpacity>
+                        ))}
+                        {ChooseKategori?.map((chooselistproduk) => (
+                            <TouchableOpacity
+                                onPress={() =>
+                                    setShouldShowModal(!shouldShowModal)
+                                }
+                                style={kasirStyle.item_kategori}
+                                key={chooselistproduk.id_produk}
+                            >
+                                <View style={kasirStyle.item}>
+                                    <View style={kasirStyle.box_image}>
+                                        <Image
+                                            style={kasirStyle.product_image}
+                                            // source={require('../assets/images/tes.png')}
+                                            source={{
+                                                uri: `http://localhost:4000/${chooselistproduk.link_foto_produk}`,
+                                            }}
+                                        ></Image>
+                                    </View>
+                                    <View style={kasirStyle.box_info}>
+                                        <Text
+                                            numberOfLines={3}
+                                            style={kasirStyle.product_name}
+                                        >
+                                            {chooselistproduk.nama_produk}
+                                            {/* aidasda asdajdai sds dds ds dds ds
+                                            ds ds d sd sds ds ds ds ds ds s d ss
+                                            d ds ds ds ds ds ds ds s dsd */}
                                         </Text>
                                     </View>
                                 </View>
@@ -493,118 +580,112 @@ const Kasir = ({ navigation }) => {
                             </View>
                         </TouchableOpacity>
                     </View>
-                    <View style={kasirStyle.modalside}>
-                        <View style={kasirStyle.modalproductbox}>
-                            <Image
-                                style={kasirStyle.modalproductimage}
-                                source={require("../assets/images/tes.png")}
-                            ></Image>
-                        </View>
-                        <View style={kasirStyle.modalproductinfo}>
-                            <Text style={kasirStyle.modalproductname}>
-                                Nabati Keju Pengen Apa
-                            </Text>
-                            <View style={kasirStyle.modalvariasi}>
-                                <Text>Variasi :</Text>
-                                <View style={kasirStyle.modaljenisproduk}>
-                                    <ScrollView
-                                        horizontal={true}
-                                        showsHorizontalScrollIndicator={false}
-                                    >
-                                        <View style={kasirStyle.kategoribox}>
-                                            <Button
-                                                style={kasirStyle.kategoritext}
-                                            >
-                                                Satuan
-                                            </Button>
-                                        </View>
-                                        <View style={kasirStyle.kategoribox}>
-                                            <Button
-                                                style={kasirStyle.kategoritext}
-                                            >
-                                                Lusin
-                                            </Button>
-                                        </View>
-                                        <View style={kasirStyle.kategoribox}>
-                                            <Button
-                                                style={kasirStyle.kategoritext}
-                                            >
-                                                Dus
-                                            </Button>
-                                        </View>
-                                    </ScrollView>
-                                </View>
+                    {DataProdukByID?.map((data_produk) => (
+                        <View
+                            style={kasirStyle.modalside}
+                            key={data_produk.id_produk}
+                        >
+                            <View style={kasirStyle.modalproductbox}>
+                                <Image
+                                    style={kasirStyle.modalproductimage}
+                                    source={{
+                                        uri: `http://localhost:4000/${data_produk.link_foto_produk}`,
+                                    }}
+                                ></Image>
                             </View>
-                            <View style={kasirStyle.modalvariasi}>
-                                <Text>Jenis :</Text>
-                                <View style={kasirStyle.modaljenisproduk}>
-                                    <ScrollView
-                                        horizontal={true}
-                                        showsHorizontalScrollIndicator={false}
-                                    >
-                                        <View style={kasirStyle.kategoribox}>
-                                            <Button
-                                                style={kasirStyle.kategoritext}
-                                            >
-                                                Satuan
-                                            </Button>
-                                        </View>
-                                        <View style={kasirStyle.kategoribox}>
-                                            <Button
-                                                style={kasirStyle.kategoritext}
-                                            >
-                                                Lusin
-                                            </Button>
-                                        </View>
-                                        <View style={kasirStyle.kategoribox}>
-                                            <Button
-                                                style={kasirStyle.kategoritext}
-                                            >
-                                                Dus
-                                            </Button>
-                                        </View>
-                                    </ScrollView>
-                                </View>
-                            </View>
-                            <View style={kasirStyle.modaltotal}>
+                            <View style={kasirStyle.modalproductinfo}>
+                                <Text style={kasirStyle.modalproductname}>
+                                    {data_produk.nama_produk}
+                                </Text>
                                 <View style={kasirStyle.modalvariasi}>
-                                    <Text>Jumlah : </Text>
-                                </View>
-                                <View style={kasirStyle.modaljumlahproduct}>
-                                    <View style={kasirStyle.btnincdec}>
-                                        <Counter
-                                            start={0}
-                                            min={0}
-                                            max={100}
-                                            buttonStyle={{
-                                                borderColor: "#333",
-                                                borderWidth: 2,
-                                            }}
-                                            buttonTextStyle={{
-                                                color: "#333",
-                                            }}
-                                            countTextStyle={{
-                                                color: "#333",
-                                            }}
-                                        />
+                                    <Text>Jenis :</Text>
+                                    <View style={kasirStyle.modaljenisproduk}>
+                                        <ScrollView
+                                            horizontal={true}
+                                            showsHorizontalScrollIndicator={
+                                                false
+                                            }
+                                        >
+                                            {DataDetailProduk?.map(
+                                                (detail_produk) => (
+                                                    <View
+                                                        key={
+                                                            detail_produk.id_detail_produk
+                                                        }
+                                                        style={
+                                                            kasirStyle.kategoribox
+                                                        }
+                                                    >
+                                                        <Button
+                                                            style={
+                                                                kasirStyle.kategoritext
+                                                            }
+                                                            onPress={() => {
+                                                                setHargaProduk(
+                                                                    detail_produk.harga_produk,
+                                                                )
+                                                                setJumlahStok(
+                                                                    detail_produk.jumlah_produk,
+                                                                )
+                                                            }}
+                                                        >
+                                                            {
+                                                                detail_produk.nama_jenis_produk
+                                                            }
+                                                        </Button>
+                                                    </View>
+                                                ),
+                                            )}
+                                        </ScrollView>
                                     </View>
-                                    <View style={kasirStyle.modalstokproduct}>
-                                        <Text style={kasirStyle.textstok}>
-                                            Stok : 50
+                                </View>
+
+                                <View style={kasirStyle.modaltotal}>
+                                    <View style={kasirStyle.modalvariasi}>
+                                        <Text>Jumlah : </Text>
+                                    </View>
+                                    <View style={kasirStyle.modaljumlahproduct}>
+                                        <View style={kasirStyle.btnincdec}>
+                                            <Counter
+                                                start={0}
+                                                min={0}
+                                                max={100}
+                                                buttonStyle={{
+                                                    borderColor: "#333",
+                                                    borderWidth: 2,
+                                                }}
+                                                buttonTextStyle={{
+                                                    color: "#333",
+                                                }}
+                                                countTextStyle={{
+                                                    color: "#333",
+                                                }}
+                                            />
+                                        </View>
+                                        <View
+                                            style={kasirStyle.modalstokproduct}
+                                        >
+                                            <Text style={kasirStyle.textstok}>
+                                                Stok : {JumlahStok}
+                                                {/* {detail_produk.jumlah_produk} */}
+                                            </Text>
+                                        </View>
+                                    </View>
+                                </View>
+                                <View style={kasirStyle.modalvariasi}>
+                                    <Text>Harga :</Text>
+                                    <View style={kasirStyle.paddingtop10}>
+                                        <Text
+                                            style={kasirStyle.modalproductprice}
+                                        >
+                                            {HargaProduk}
+                                            {/* {detail_produk.harga_produk} */}
                                         </Text>
                                     </View>
                                 </View>
                             </View>
-                            <View style={kasirStyle.modalvariasi}>
-                                <Text>Harga :</Text>
-                                <View style={kasirStyle.paddingtop10}>
-                                    <Text style={kasirStyle.modalproductprice}>
-                                        Rp 50.000
-                                    </Text>
-                                </View>
-                            </View>
                         </View>
-                    </View>
+                    ))}
                     <View style={kasirStyle.modalproductbtn}>
                         <Button style={kasirStyle.btnaddtocart}>
                             Add To Cart

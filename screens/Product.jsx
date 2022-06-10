@@ -137,6 +137,7 @@ const Product = ({ navigation }) => {
             setChooseKategori([])
         } catch (error) {
             setDataListProduk([])
+            // setChooseKategori([])
             console.log(error.response.data)
         }
     }
@@ -153,6 +154,7 @@ const Product = ({ navigation }) => {
             setDataListProduk([])
         } catch (error) {
             setChooseKategori([])
+            setDataListProduk([])
             console.log(error.response.data)
         }
     }
@@ -387,7 +389,9 @@ const Product = ({ navigation }) => {
                             <TouchableOpacity style={productStyle.kategoribox}>
                                 <Button
                                     style={productStyle.kategoritext}
-                                    onPress={() => fetchprodukallkategori()}
+                                    onPress={() => {
+                                        fetchprodukallkategori()
+                                    }}
                                 >
                                     All
                                 </Button>

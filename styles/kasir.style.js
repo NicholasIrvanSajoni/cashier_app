@@ -87,8 +87,13 @@ const kasirStyle = StyleSheet.create({
         flexDirection: "row",
     },
 
-    kategoritext: {
+    kategoritextclick: {
         backgroundColor: colors.lightblue,
+    },
+
+    kategoritextunclick: {
+        borderColor: colors.lightblue,
+        borderWidth: 1,
     },
 
     kategoribox: {

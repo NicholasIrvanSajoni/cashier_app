@@ -14,7 +14,7 @@ import {
 import Counter from "react-native-counters"
 import {
     Card,
-    Button,
+    // Button,
     Title,
     Paragraph,
     Searchbar,
@@ -27,8 +27,6 @@ import UserContext from "../context/user-context"
 import kasirStyle from "../styles/kasir.style"
 const Kasir = ({ navigation }) => {
     const usercontext = useContext(UserContext)
-
-    const handlerhidecart = () => {}
 
     const [shouldShow, setShouldShow] = useState(false)
     const [shouldShowModal, setShouldShowModal] = useState(false)
@@ -48,14 +46,42 @@ const Kasir = ({ navigation }) => {
     const [DataProdukByID, setDataProdukByID] = useState()
     const [HargaProduk, setHargaProduk] = useState("")
     const [JumlahStok, setJumlahStok] = useState("")
+    // hms karena ku set dari hasil mapping?
+    // ribet sih saia drtd mikir gimana cara buat defaultnya
+    // masalahnya delay usestate lagi ;)
+
+    const [IncdecValue, setIncdecValue] = useState(1)
+    const [BtnIncrease, setBtnIncrease] = useState(false)
+    const [BtnDecrease, setBtnDecrease] = useState(false)
+    const [TotalHarga, setTotalHarga] = useState("")
+
+    // Test
+    const [ArrayCart, setArrayCart] = useState([
+        {
+            CartNamaProduk: "",
+            CartJumlahProduk: "",
+            CartHargaProduk: "",
+            CartFotoProduk: "",
+        },
+    ])
 
     useEffect(() => {
         fetchKategori()
         fetchprodukallkategori()
+        console.log("array", ArrayCart)
         // fetchDataProductByID()
         // fetchDetailProduk()
         // console.log(DataListProduk)
     }, [])
+
+    useEffect(() => {
+        TotalHargaProduk()
+    }, [IncdecValue])
+
+    useEffect(() => {
+        // console.log(ArrayDetailProduk)
+        console.log(HargaProduk)
+    }, [HargaProduk])
 
     // Button Kategori
     const fetchKategori = async () => {
@@ -113,7 +139,13 @@ const Kasir = ({ navigation }) => {
             const getdetailproduk = (
                 await axios.get(`/jenisproduk/produk/${id_produk}`)
             ).data
-            setDataDetailProduk(getdetailproduk.data)
+            setDataDetailProduk(getdetailproduk.data) //all data
+            // setArrayDetailProduk(getdetailproduk.data[0])
+            setHargaProduk(getdetailproduk.data[0].harga_produk)
+            setJumlahStok(getdetailproduk.data[0].jumlah_produk)
+            setTotalHarga(getdetailproduk.data[0].harga_produk)
+            //1 data buat
+            // apa yang ditampilin pertama?
             // console.log(DataDetailProduk)
         } catch (error) {
             setDataDetailProduk([])
@@ -131,6 +163,44 @@ const Kasir = ({ navigation }) => {
             console.log(error.response.data)
         }
     }
+
+    const TotalHargaProduk = () => {
+        const jumlahValue = Number(IncdecValue)
+        const totalhargaproduk = jumlahValue * Number(HargaProduk)
+        setTotalHarga(totalhargaproduk)
+        console.log("func", totalhargaproduk)
+    }
+
+    const IncreaseValue = () => {
+        const increasedValue = Number(IncdecValue) + 1
+        if (increasedValue > JumlahStok) return
+        setIncdecValue(increasedValue)
+        TotalHargaProduk()
+        HandlerFunction(increasedValue)
+    }
+    // iya begitu bisa keknya Number tdi
+    const DecreaseValue = () => {
+        const decreasedValue = Number(IncdecValue) - 1
+        if (decreasedValue < 1) return
+        setIncdecValue(decreasedValue)
+        TotalHargaProduk()
+        HandlerFunction(decreasedValue)
+    }
+    // apa?
+    const HandlerFunction = (changedValue) => {
+        if (Number(changedValue) <= 1) {
+            // alert("Gabole minus woi")
+            setBtnDecrease(true)
+        } else if (Number(changedValue) >= Number(JumlahStok)) {
+            // alert("Kebanyakkan")
+            setBtnIncrease(true)
+        } else {
+            setBtnDecrease(false)
+            setBtnIncrease(false)
+        }
+    }
+
+    const HandlerAddToCart = () => {}
 
     // const [isModalVisible, setModalVisible] = useState(false);
 
@@ -192,42 +262,46 @@ const Kasir = ({ navigation }) => {
                             horizontal={true}
                             showsHorizontalScrollIndicator={false}
                         >
-                            <TouchableOpacity style={kasirStyle.kategoribox}>
-                                <Button
+                            <View style={kasirStyle.kategoribox}>
+                                <TouchableOpacity
                                     style={
                                         KategoriClicked
-                                            ? kasirStyle.kategoritextclick
-                                            : kasirStyle.kategoritextunclick
+                                            ? kasirStyle.kategoriboxclick
+                                            : kasirStyle.kategoriboxunclick
                                     }
                                     onPress={() => {
                                         fetchprodukallkategori()
                                         setKategoriClicked(true)
                                     }}
                                 >
-                                    All
-                                </Button>
-                            </TouchableOpacity>
+                                    <Text style={kasirStyle.kategoritext}>
+                                        All
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
                             {DataListKategori?.map((listkategori) => (
-                                <TouchableOpacity
+                                <View
                                     style={kasirStyle.kategoribox}
                                     key={listkategori.id_kategori}
-                                    onPress={() => {
-                                        fetchprodukbykategori(
-                                            listkategori.id_kategori,
-                                        )
-                                        setKategoriClicked(false)
-                                    }}
                                 >
-                                    <Button
+                                    <TouchableOpacity
                                         style={
                                             KategoriClicked
-                                                ? kasirStyle.kategoritextunclick
-                                                : kasirStyle.kategoritextclick
+                                                ? kasirStyle.kategoriboxunclick
+                                                : kasirStyle.kategoriboxclick
                                         }
+                                        onPress={() => {
+                                            fetchprodukbykategori(
+                                                listkategori.id_kategori,
+                                            )
+                                            setKategoriClicked(false)
+                                        }}
                                     >
-                                        {listkategori.nama_kategori}
-                                    </Button>
-                                </TouchableOpacity>
+                                        <Text style={kasirStyle.kategoritext}>
+                                            {listkategori.nama_kategori}
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
                             ))}
                         </ScrollView>
                     </View>
@@ -242,7 +316,7 @@ const Kasir = ({ navigation }) => {
                         {DataListProduk?.map((listproduk) => (
                             <TouchableOpacity
                                 onPress={() => {
-                                    setShouldShowModal(!shouldShowModal)
+                                    setShouldShowModal(true)
                                     fetchDetailProduk(listproduk.id_produk)
                                     fetchDataProductByID(listproduk.id_produk)
                                 }}
@@ -265,6 +339,7 @@ const Kasir = ({ navigation }) => {
                                             style={kasirStyle.product_name}
                                         >
                                             {listproduk.nama_produk}
+                                            {listproduk.harga_produk}
                                             {/* aidasda asdajdai sds dds ds dds ds
                                             ds ds d sd sds ds ds ds ds ds s d ss
                                             d ds ds ds ds ds ds ds s dsd */}
@@ -275,9 +350,7 @@ const Kasir = ({ navigation }) => {
                         ))}
                         {ChooseKategori?.map((chooselistproduk) => (
                             <TouchableOpacity
-                                onPress={() =>
-                                    setShouldShowModal(!shouldShowModal)
-                                }
+                                onPress={() => setShouldShowModal(true)}
                                 style={kasirStyle.item_kategori}
                                 key={chooselistproduk.id_produk}
                             >
@@ -551,12 +624,12 @@ const Kasir = ({ navigation }) => {
                                 Rp. 3.293.000
                             </Text>
                         </View>
-                        <Button
+                        <TouchableOpacity
                             style={kasirStyle.btncheckout}
                             onPress={() => navigation.navigate("Checkout")}
                         >
-                            Checkout
-                        </Button>
+                            <Text>Checkout</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
             ) : null}
@@ -571,7 +644,10 @@ const Kasir = ({ navigation }) => {
                             </Text>
                         </View>
                         <TouchableOpacity
-                            onPress={() => setShouldShowModal(!shouldShowModal)}
+                            onPress={() => {
+                                setShouldShowModal(!shouldShowModal)
+                                setIncdecValue(1)
+                            }}
                         >
                             <View style={kasirStyle.rightheadermodal}>
                                 <Image
@@ -606,19 +682,20 @@ const Kasir = ({ navigation }) => {
                                                 false
                                             }
                                         >
+                                            {/*  */}
                                             {DataDetailProduk?.map(
                                                 (detail_produk) => (
                                                     <View
                                                         key={
-                                                            detail_produk.id_detail_produk
+                                                            detail_produk.id_jenis_produk
                                                         }
                                                         style={
                                                             kasirStyle.kategoribox
                                                         }
                                                     >
-                                                        <Button
+                                                        <TouchableOpacity
                                                             style={
-                                                                kasirStyle.kategoritext
+                                                                kasirStyle.kategoriboxclick
                                                             }
                                                             onPress={() => {
                                                                 setHargaProduk(
@@ -629,10 +706,12 @@ const Kasir = ({ navigation }) => {
                                                                 )
                                                             }}
                                                         >
-                                                            {
-                                                                detail_produk.nama_jenis_produk
-                                                            }
-                                                        </Button>
+                                                            <Text>
+                                                                {
+                                                                    detail_produk.nama_jenis_produk
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
                                                     </View>
                                                 ),
                                             )}
@@ -645,11 +724,13 @@ const Kasir = ({ navigation }) => {
                                         <Text>Jumlah : </Text>
                                     </View>
                                     <View style={kasirStyle.modaljumlahproduct}>
-                                        <View style={kasirStyle.btnincdec}>
-                                            <Counter
-                                                start={0}
-                                                min={0}
-                                                max={100}
+                                        <View
+                                            style={kasirStyle.detailbtnincdec}
+                                        >
+                                            {/* <Counter
+                                                start={1}
+                                                min={1}
+                                                max={JumlahStok}
                                                 buttonStyle={{
                                                     borderColor: "#333",
                                                     borderWidth: 2,
@@ -660,7 +741,34 @@ const Kasir = ({ navigation }) => {
                                                 countTextStyle={{
                                                     color: "#333",
                                                 }}
-                                            />
+                                            /> */}
+                                            <TouchableOpacity
+                                                style={kasirStyle.btndecrease}
+                                                onPress={() => DecreaseValue()}
+                                                disabled={BtnDecrease}
+                                            >
+                                                <Image
+                                                    style={
+                                                        kasirStyle.btnincdecimg
+                                                    }
+                                                    source={require("../assets/images/Icon/minus.png")}
+                                                ></Image>
+                                            </TouchableOpacity>
+                                            <Text style={kasirStyle.textincdec}>
+                                                {IncdecValue}
+                                            </Text>
+                                            <TouchableOpacity
+                                                style={kasirStyle.btnincrease}
+                                                onPress={() => IncreaseValue()}
+                                                disabled={BtnIncrease}
+                                            >
+                                                <Image
+                                                    style={
+                                                        kasirStyle.btnincdecimg
+                                                    }
+                                                    source={require("../assets/images/Icon/plus.png")}
+                                                ></Image>
+                                            </TouchableOpacity>
                                         </View>
                                         <View
                                             style={kasirStyle.modalstokproduct}
@@ -682,14 +790,29 @@ const Kasir = ({ navigation }) => {
                                             {/* {detail_produk.harga_produk} */}
                                         </Text>
                                     </View>
+                                    <Text>Harga Total :</Text>
+                                    <View style={kasirStyle.paddingtop10}>
+                                        <Text
+                                            style={kasirStyle.modalproductprice}
+                                        >
+                                            {TotalHarga}
+                                        </Text>
+                                    </View>
                                 </View>
                             </View>
                         </View>
                     ))}
                     <View style={kasirStyle.modalproductbtn}>
-                        <Button style={kasirStyle.btnaddtocart}>
-                            Add To Cart
-                        </Button>
+                        <TouchableOpacity
+                            style={kasirStyle.btnaddtocart}
+                            onPress={() => {
+                                HandlerAddToCart()
+                            }}
+                        >
+                            <Text style={kasirStyle.textaddtocart}>
+                                Add To Cart
+                            </Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
             ) : null}

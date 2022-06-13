@@ -1,5 +1,5 @@
 import { Dimensions, StyleSheet } from "react-native"
-import colors from "../constants/Colors"
+import colors, { black } from "../constants/Colors"
 
 const kasirStyle = StyleSheet.create({
     box_dashboard_kategori: {
@@ -87,13 +87,24 @@ const kasirStyle = StyleSheet.create({
         flexDirection: "row",
     },
 
-    kategoritextclick: {
+    kategoriboxclick: {
         backgroundColor: colors.lightblue,
+        paddingVertical: 8,
+        paddingHorizontal: 15,
+        borderRadius: 4,
     },
 
-    kategoritextunclick: {
+    kategoriboxunclick: {
         borderColor: colors.lightblue,
         borderWidth: 1,
+        paddingVertical: 8,
+        paddingHorizontal: 15,
+        borderRadius: 4,
+    },
+
+    kategoritext: {
+        fontSize: 16,
+        color: colors.black,
     },
 
     kategoribox: {
@@ -290,8 +301,53 @@ const kasirStyle = StyleSheet.create({
         borderColor: colors.lightblue,
     },
 
+    detailbtnincdec: {
+        display: "flex",
+        flexDirection: "row",
+        paddingTop: 5,
+    },
+
+    btndecrease: {
+        borderWidth: 2,
+        borderColor: colors.black,
+        marginRight: 15,
+        borderRadius: 5,
+        marginTop: "auto",
+        marginBottom: "auto",
+        padding: 3,
+    },
+
+    btnincrease: {
+        borderWidth: 2,
+        borderColor: colors.black,
+        marginLeft: 15,
+        borderRadius: 5,
+        marginTop: "auto",
+        marginBottom: "auto",
+        padding: 3,
+    },
+
+    btnincdecimg: {
+        width: 30,
+        height: 30,
+    },
+
+    textincdec: {
+        fontSize: 20,
+        marginTop: "auto",
+        marginBottom: "auto",
+    },
+
     btnaddtocart: {
         backgroundColor: colors.lightyellow,
+        color: colors.lightred,
+        padding: 5,
+    },
+
+    textaddtocart: {
+        textAlign: "center",
+        fontSize: 18,
+        fontWeight: "bold",
     },
 
     modalvariasi: {

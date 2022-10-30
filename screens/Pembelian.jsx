@@ -51,6 +51,7 @@ const Pembelian = ({ navigation }) => {
         { id: 10, name: "instagram" },
     ]
 
+    const [AddNamaProduk, setAddNamaProduk] = useState()
     const [selectedNamaProduk, setSelectedNamaProduk] = useState("")
     const [shouldShowModal, setShouldShowModal] = useState(false)
     const [NamaProduk, setNamaProduk] = useState("")
@@ -76,7 +77,9 @@ const Pembelian = ({ navigation }) => {
 
     useEffect(() => {
         fetchprodukpembelian()
+        fetchNamaProdukPembelian()
         console.log(DataAllProduct)
+        console.log(AddNamaProduk)
     }, [])
 
     const fetchprodukpembelian = async () => {
@@ -85,6 +88,12 @@ const Pembelian = ({ navigation }) => {
         ).data
         // console.log(getprodukpembelian.data)
         setDataAllProduct(getprodukpembelian.data)
+    }
+
+    const fetchNamaProdukPembelian = async () => {
+        const getNamaProdukPembelian = (
+            await axios.get(`/product/namaproduk/${usercontext.UserData.id_user}`)).data
+            setAddNamaProduk(getNamaProdukPembelian.data) 
     }
 
     const onChange = (event, selectedDate) => {

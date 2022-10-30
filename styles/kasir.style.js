@@ -196,7 +196,7 @@ const kasirStyle = StyleSheet.create({
 
     boxitem: {
         flexDirection: "row",
-        borderWidth: 2,
+        borderBottomWidth: 2,
         borderColor: colors.black,
         flexWrap: "wrap",
         paddingBottom: 5,
@@ -241,7 +241,14 @@ const kasirStyle = StyleSheet.create({
 
     btncheckout: {
         backgroundColor: colors.lightyellow,
-        paddingTop: 4,
+        paddingHorizontal: 15,
+    },
+
+    text_btn_checkout: {
+        fontSize: 18,
+        marginTop: "auto",
+        marginBottom: "auto",
+        fontWeight: "bold",
     },
 
     // Modal

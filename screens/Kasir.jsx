@@ -10,8 +10,7 @@ import {
     Image,
     ScrollView,
 } from "react-native"
-
-import Counter from "react-native-counters"
+import NumberFormat from "react-number-format"
 import {
     Card,
     // Button,
@@ -25,6 +24,7 @@ import {
 } from "react-native-paper"
 import UserContext from "../context/user-context"
 import kasirStyle from "../styles/kasir.style"
+
 const Kasir = ({ navigation }) => {
     const usercontext = useContext(UserContext)
 
@@ -41,38 +41,44 @@ const Kasir = ({ navigation }) => {
     const [ChooseKategori, setChooseKategori] = useState()
 
     // Detail Produk
-    const [IDProduk, setIDProduk] = useState("")
     const [DataDetailProduk, setDataDetailProduk] = useState()
     const [DataProdukByID, setDataProdukByID] = useState()
-    const [HargaProduk, setHargaProduk] = useState("")
-    const [JumlahStok, setJumlahStok] = useState("")
-    // hms karena ku set dari hasil mapping?
-    // ribet sih saia drtd mikir gimana cara buat defaultnya
-    // masalahnya delay usestate lagi ;)
+    const [IDProduk, setIDProduk] = useState("")
+    const [IDJenisProduk, setIDJenisProduk] = useState("")
+    const [HargaProduk, setHargaProduk] = useState(0)
+    const [NamaProduk, setNamaProduk] = useState("")
+    const [GambarProduk, setGambarProduk] = useState("")
+    const [JumlahStok, setJumlahStok] = useState(0)
 
+    // Btn Increase Decrease Value
     const [IncdecValue, setIncdecValue] = useState(1)
     const [BtnIncrease, setBtnIncrease] = useState(false)
     const [BtnDecrease, setBtnDecrease] = useState(false)
     const [TotalHarga, setTotalHarga] = useState("")
 
-    // Test
-    const [ArrayCart, setArrayCart] = useState([
-        {
-            CartNamaProduk: "",
-            CartJumlahProduk: "",
-            CartHargaProduk: "",
-            CartFotoProduk: "",
-        },
-    ])
+    // Cart
+    const [ArrayCart, setArrayCart] = useState([])
+    const [TotalBelanja, setTotalBelanja] = useState(0)
+
+    // Tes
+    const [Wakanai, setWakanai] = useState(0)
 
     useEffect(() => {
         fetchKategori()
         fetchprodukallkategori()
-        console.log("array", ArrayCart)
         // fetchDataProductByID()
         // fetchDetailProduk()
         // console.log(DataListProduk)
     }, [])
+
+    useEffect(() => {
+        console.log("array", ArrayCart)
+        CartTotalBelanja()
+    }, [ArrayCart])
+
+    useEffect(() => {
+        CartTotalBelanja()
+    }, [Wakanai])
 
     useEffect(() => {
         TotalHargaProduk()
@@ -82,6 +88,10 @@ const Kasir = ({ navigation }) => {
         // console.log(ArrayDetailProduk)
         console.log(HargaProduk)
     }, [HargaProduk])
+
+    useEffect(() => {
+        console.log(IDJenisProduk)
+    }, [IDJenisProduk])
 
     // Button Kategori
     const fetchKategori = async () => {
@@ -144,6 +154,7 @@ const Kasir = ({ navigation }) => {
             setHargaProduk(getdetailproduk.data[0].harga_produk)
             setJumlahStok(getdetailproduk.data[0].jumlah_produk)
             setTotalHarga(getdetailproduk.data[0].harga_produk)
+            setIDJenisProduk(getdetailproduk.data[0].id_jenis_produk)
             //1 data buat
             // apa yang ditampilin pertama?
             // console.log(DataDetailProduk)
@@ -164,49 +175,171 @@ const Kasir = ({ navigation }) => {
         }
     }
 
-    const TotalHargaProduk = () => {
-        const jumlahValue = Number(IncdecValue)
-        const totalhargaproduk = jumlahValue * Number(HargaProduk)
-        setTotalHarga(totalhargaproduk)
-        console.log("func", totalhargaproduk)
-    }
+    // Total Harga Produk Detail Produk
 
-    const IncreaseValue = () => {
-        const increasedValue = Number(IncdecValue) + 1
-        if (increasedValue > JumlahStok) return
-        setIncdecValue(increasedValue)
-        TotalHargaProduk()
-        HandlerFunction(increasedValue)
-    }
-    // iya begitu bisa keknya Number tdi
-    const DecreaseValue = () => {
-        const decreasedValue = Number(IncdecValue) - 1
-        if (decreasedValue < 1) return
-        setIncdecValue(decreasedValue)
-        TotalHargaProduk()
-        HandlerFunction(decreasedValue)
-    }
-    // apa?
-    const HandlerFunction = (changedValue) => {
-        if (Number(changedValue) <= 1) {
-            // alert("Gabole minus woi")
-            setBtnDecrease(true)
-        } else if (Number(changedValue) >= Number(JumlahStok)) {
-            // alert("Kebanyakkan")
-            setBtnIncrease(true)
-        } else {
-            setBtnDecrease(false)
-            setBtnIncrease(false)
+    const TotalHargaProduk = () => {
+        try {
+            const jumlahValue = Number(IncdecValue)
+            const totalhargaproduk = jumlahValue * Number(HargaProduk)
+            setTotalHarga(totalhargaproduk)
+            console.log("func", totalhargaproduk)
+        } catch (error) {
+            console.log(error.response.data)
         }
     }
 
-    const HandlerAddToCart = () => {}
+    // Button Increase Decrease Jumlah Detail Produk
+    const IncreaseValue = () => {
+        try {
+            const increasedValue = Number(IncdecValue) + 1
+            if (increasedValue > JumlahStok) return
+            setIncdecValue(increasedValue)
+            TotalHargaProduk()
+            HandlerFunction(increasedValue)
+        } catch (error) {
+            console.log(error.response.data)
+        }
+    }
+
+    const DecreaseValue = () => {
+        try {
+            const decreasedValue = Number(IncdecValue) - 1
+            if (decreasedValue < 1) return
+            setIncdecValue(decreasedValue)
+            TotalHargaProduk()
+            HandlerFunction(decreasedValue)
+        } catch (error) {
+            console.log(error.response.data)
+        }
+    }
+
+    const HandlerFunction = (changedValue) => {
+        try {
+            if (Number(changedValue) <= 1) {
+                // alert("Gabole minus woi")
+                setBtnDecrease(true)
+            } else if (Number(changedValue) >= Number(JumlahStok)) {
+                // alert("Kebanyakkan")
+                setBtnIncrease(true)
+            } else {
+                setBtnDecrease(false)
+                setBtnIncrease(false)
+            }
+        } catch (error) {
+            console.log(error.response.data)
+        }
+    }
+
+    // Add Array To Usestate Cart
+    const HandlerAddToCart = () => {
+        setArrayCart((ArrayCart) => [
+            ...ArrayCart,
+            {
+                CartIDJenisProduk: IDJenisProduk,
+                CartIDProduk: IDProduk,
+                CartNamaProduk: NamaProduk,
+                CartGambarProduk: GambarProduk,
+                CartJumlahProduk: IncdecValue,
+                CartHargaTotalProduk: TotalHarga,
+                CartHargaSatuanProduk: HargaProduk,
+                CartStokProduk: JumlahStok,
+                CartTotalBelanja: TotalBelanja,
+            },
+        ])
+    }
+
+    // Kasir modal function ===================================================================
+
+    const CartIncreaseValueProduct = (target_item_cart) => {
+        const editedArrayCart = ArrayCart.map((item_cart) => {
+            if (
+                item_cart.CartIDJenisProduk ===
+                    target_item_cart.CartIDJenisProduk &&
+                target_item_cart.CartJumlahProduk < item_cart.CartStokProduk
+            ) {
+                return {
+                    ...item_cart,
+                    CartJumlahProduk: item_cart.CartJumlahProduk + 1,
+                    CartHargaTotalProduk:
+                        item_cart.CartHargaSatuanProduk *
+                        (item_cart.CartJumlahProduk + 1),
+                }
+            }
+            return {
+                ...item_cart,
+            }
+        })
+        setArrayCart(editedArrayCart)
+        CartTotalBelanja()
+    }
+
+    const CartDecreaseValueProduct = (target_item_cart) => {
+        const editedArrayCart = ArrayCart.map((item_cart) => {
+            if (
+                item_cart.CartIDJenisProduk ===
+                    target_item_cart.CartIDJenisProduk &&
+                target_item_cart.CartJumlahProduk > 1
+            ) {
+                return {
+                    ...item_cart,
+                    CartJumlahProduk: item_cart.CartJumlahProduk - 1,
+                    CartHargaTotalProduk:
+                        item_cart.CartHargaSatuanProduk *
+                        (item_cart.CartJumlahProduk - 1),
+                }
+            }
+            return {
+                ...item_cart,
+            }
+        })
+        setArrayCart(editedArrayCart)
+        CartTotalBelanja()
+    }
+
+    // const CartTotalBelanja = (total, num) => {
+    //     // return total + num
+    //     const countTotalHarga = ArrayCart.map(
+    //         (item_cart) => item_cart.CartHargaTotalProduk,
+    //     )
+    //     setTesLagi(countTotalHarga)
+
+    //     if (TesLagi == []) {
+    //         console.log("gabisa")
+    //     } else {
+    //         const sum = TesLagi.reduce(function (total, num) {
+    //             return total + num
+    //         })
+    //         console.log("aoskaoksoksad", sum)
+    //         setWakanai(sum)
+    //     }
+    // }
 
     // const [isModalVisible, setModalVisible] = useState(false);
 
     // const toggleModal = () => {
     //     setModalVisible(!isModalVisible);
     // };
+
+    // Total Harga Cart
+    const CartTotalBelanja = () => {
+        const sum = ArrayCart.reduce(
+            (accum, item) => accum + item.CartHargaTotalProduk,
+            0,
+        )
+
+        console.log("WKAA", sum)
+        setWakanai(sum)
+    }
+
+    const CartDeleteProduct = (target_item_cart) => {
+        const filteredCartArray = ArrayCart.filter((item) => {
+            if (item.CartIDJenisProduk === target_item_cart.CartIDJenisProduk) {
+                return false
+            }
+            return true
+        })
+        setArrayCart(filteredCartArray)
+    }
 
     return (
         <View style={kasirStyle.home}>
@@ -256,7 +389,6 @@ const Kasir = ({ navigation }) => {
                             <Button>Ok</Button>
                         </Card.Actions>
                     </Card> */}
-
                     <View style={kasirStyle.kategoricard}>
                         <ScrollView
                             horizontal={true}
@@ -305,7 +437,6 @@ const Kasir = ({ navigation }) => {
                             ))}
                         </ScrollView>
                     </View>
-
                     <View style={kasirStyle.box_dashboard_kategori}>
                         {/* <Provider>
                             <Portal>
@@ -317,6 +448,9 @@ const Kasir = ({ navigation }) => {
                             <TouchableOpacity
                                 onPress={() => {
                                     setShouldShowModal(true)
+                                    setNamaProduk(listproduk.nama_produk)
+                                    setGambarProduk(listproduk.link_foto_produk)
+                                    setIDProduk(listproduk.id_produk)
                                     fetchDetailProduk(listproduk.id_produk)
                                     fetchDataProductByID(listproduk.id_produk)
                                 }}
@@ -404,175 +538,130 @@ const Kasir = ({ navigation }) => {
                         </TouchableOpacity>
                     </View>
                     <View>
-                        <View style={kasirStyle.itemcart}>
-                            <View style={kasirStyle.boxitem}>
-                                {/* <View style={kasirStyle.checkcart}>
+                        {ArrayCart?.map((item_cart) => (
+                            <View
+                                style={kasirStyle.itemcart}
+                                key={item_cart.CartIDJenisProduk}
+                            >
+                                <View style={kasirStyle.boxitem}>
+                                    {/* <View style={kasirStyle.checkcart}>
                             <Checkbox style={kasirStyle.checkboxcart}
                             status={checked ? 'checked' : 'unchecked'}
                             onPress={() => {
                                 setChecked(!checked);
                             }}
                             />
-                        </View> */}
-                                <View style={kasirStyle.itemcartboximage}>
-                                    <Image
-                                        style={kasirStyle.itemcartimage}
-                                        source={require("../assets/images/tes.png")}
-                                    ></Image>
-                                </View>
-                                <View style={kasirStyle.deskripsiitem}>
-                                    <View>
-                                        <Text>
-                                            Permen Sweet asdasasdas dasd sad
-                                        </Text>
-                                    </View>
-                                    <View>
-                                        <Text style={kasirStyle.textharga}>
-                                            156.000
-                                        </Text>
-                                    </View>
-                                    <View style={kasirStyle.btnincdec}>
-                                        <Counter
-                                            start={0}
-                                            min={0}
-                                            max={100}
-                                            buttonStyle={{
-                                                borderColor: "#333",
-                                                borderWidth: 2,
+                            </View> */}
+                                    <View style={kasirStyle.itemcartboximage}>
+                                        <Image
+                                            style={kasirStyle.itemcartimage}
+                                            source={{
+                                                uri: `http://localhost:4000/${item_cart.CartGambarProduk}`,
                                             }}
-                                            buttonTextStyle={{
-                                                color: "#333",
-                                            }}
-                                            countTextStyle={{
-                                                color: "#333",
-                                            }}
-                                        />
+                                        ></Image>
                                     </View>
-                                </View>
-                                <View style={kasirStyle.trashiconbox}>
-                                    <Image
-                                        style={kasirStyle.trashicon}
-                                        source={require("../assets/images/Icon/trash.png")}
-                                    ></Image>
+                                    <View style={kasirStyle.deskripsiitem}>
+                                        <View>
+                                            <Text>
+                                                {item_cart.CartNamaProduk}
+                                            </Text>
+                                        </View>
+                                        <View>
+                                            <Text style={kasirStyle.textharga}>
+                                                <NumberFormat
+                                                    value={
+                                                        item_cart.CartHargaTotalProduk
+                                                    }
+                                                    displayType={"text"}
+                                                    thousandSeparator={"."}
+                                                    decimalSeparator={","}
+                                                    prefix={"Rp "}
+                                                    renderText={(value) => (
+                                                        <Text>{value}</Text>
+                                                    )}
+                                                />
+                                            </Text>
+                                        </View>
+                                        <View
+                                            style={kasirStyle.detailbtnincdec}
+                                        >
+                                            {/* <Counter
+                                                start={1}
+                                                min={1}
+                                                max={JumlahStok}
+                                                buttonStyle={{
+                                                    borderColor: "#333",
+                                                    borderWidth: 2,
+                                                }}
+                                                buttonTextStyle={{
+                                                    color: "#333",
+                                                }}
+                                                countTextStyle={{
+                                                    color: "#333",
+                                                }}
+                                            /> */}
+                                            <TouchableOpacity
+                                                style={kasirStyle.btndecrease}
+                                                onPress={() =>
+                                                    CartDecreaseValueProduct(
+                                                        item_cart,
+                                                    )
+                                                }
+                                                // disabled={BtnDecrease}
+                                            >
+                                                <Image
+                                                    style={
+                                                        kasirStyle.btnincdecimg
+                                                    }
+                                                    source={require("../assets/images/Icon/minus.png")}
+                                                ></Image>
+                                            </TouchableOpacity>
+                                            <Text style={kasirStyle.textincdec}>
+                                                {item_cart.CartJumlahProduk}
+                                            </Text>
+                                            <TouchableOpacity
+                                                style={kasirStyle.btnincrease}
+                                                onPress={() =>
+                                                    CartIncreaseValueProduct(
+                                                        item_cart,
+                                                    )
+                                                }
+                                                // disabled={BtnIncrease}
+                                            >
+                                                <Image
+                                                    style={
+                                                        kasirStyle.btnincdecimg
+                                                    }
+                                                    source={require("../assets/images/Icon/plus.png")}
+                                                ></Image>
+                                            </TouchableOpacity>
+                                        </View>
+                                    </View>
+                                    <TouchableOpacity
+                                        style={kasirStyle.trashiconbox}
+                                        onPress={() => {
+                                            CartDeleteProduct(item_cart)
+                                        }}
+                                    >
+                                        <Image
+                                            style={kasirStyle.trashicon}
+                                            source={require("../assets/images/Icon/trash.png")}
+                                        ></Image>
+                                    </TouchableOpacity>
                                 </View>
                             </View>
-                        </View>
-                        <View style={kasirStyle.itemcart}>
+                        ))}
+
+                        {/* <View style={kasirStyle.itemcart}>
                             <View style={kasirStyle.boxitem}>
-                                {/* <View style={kasirStyle.checkcart}>
+                                <View style={kasirStyle.checkcart}>
                             <Checkbox style={kasirStyle.checkboxcart}
                             status={checked ? 'checked' : 'unchecked'}
                             onPress={() => {
                                 setChecked(!checked);
                             }}
                             />
-                        </View> */}
-                                <View style={kasirStyle.itemcartboximage}>
-                                    <Image
-                                        style={kasirStyle.itemcartimage}
-                                        source={require("../assets/images/tes.png")}
-                                    ></Image>
-                                </View>
-                                <View style={kasirStyle.deskripsiitem}>
-                                    <View>
-                                        <Text>
-                                            Permen Sweet asdasasdas dasd sad
-                                        </Text>
-                                    </View>
-                                    <View>
-                                        <Text style={kasirStyle.textharga}>
-                                            6.000
-                                        </Text>
-                                    </View>
-                                    <View style={kasirStyle.btnincdec}>
-                                        <Counter
-                                            start={0}
-                                            min={0}
-                                            max={100}
-                                            buttonStyle={{
-                                                borderColor: "#333",
-                                                borderWidth: 2,
-                                            }}
-                                            buttonTextStyle={{
-                                                color: "#333",
-                                            }}
-                                            countTextStyle={{
-                                                color: "#333",
-                                            }}
-                                        />
-                                    </View>
-                                </View>
-                                <View style={kasirStyle.trashiconbox}>
-                                    <Image
-                                        style={kasirStyle.trashicon}
-                                        source={require("../assets/images/Icon/trash.png")}
-                                    ></Image>
-                                </View>
-                            </View>
                         </View>
-                        <View style={kasirStyle.itemcart}>
-                            <View style={kasirStyle.boxitem}>
-                                {/* <View style={kasirStyle.checkcart}>
-                            <Checkbox style={kasirStyle.checkboxcart}
-                            status={checked ? 'checked' : 'unchecked'}
-                            onPress={() => {
-                                setChecked(!checked);
-                            }}
-                            />
-                        </View> */}
-                                <View style={kasirStyle.itemcartboximage}>
-                                    <Image
-                                        style={kasirStyle.itemcartimage}
-                                        source={require("../assets/images/tes.png")}
-                                    ></Image>
-                                </View>
-                                <View style={kasirStyle.deskripsiitem}>
-                                    <View>
-                                        <Text>
-                                            Permen Sweet asdasasdas dasd sad
-                                        </Text>
-                                    </View>
-                                    <View>
-                                        <Text style={kasirStyle.textharga}>
-                                            1.233.000
-                                        </Text>
-                                    </View>
-                                    <View style={kasirStyle.btnincdec}>
-                                        <Counter
-                                            start={0}
-                                            min={0}
-                                            max={100}
-                                            buttonStyle={{
-                                                borderColor: "#333",
-                                                borderWidth: 2,
-                                            }}
-                                            buttonTextStyle={{
-                                                color: "#333",
-                                            }}
-                                            countTextStyle={{
-                                                color: "#333",
-                                            }}
-                                        />
-                                    </View>
-                                </View>
-                                <View style={kasirStyle.trashiconbox}>
-                                    <Image
-                                        style={kasirStyle.trashicon}
-                                        source={require("../assets/images/Icon/trash.png")}
-                                    ></Image>
-                                </View>
-                            </View>
-                        </View>
-                        <View style={kasirStyle.itemcart}>
-                            <View style={kasirStyle.boxitem}>
-                                {/* <View style={kasirStyle.checkcart}>
-                            <Checkbox style={kasirStyle.checkboxcart}
-                            status={checked ? 'checked' : 'unchecked'}
-                            onPress={() => {
-                                setChecked(!checked);
-                            }}
-                            />
-                        </View> */}
                                 <View style={kasirStyle.itemcartboximage}>
                                     <Image
                                         style={kasirStyle.itemcartimage}
@@ -615,20 +704,29 @@ const Kasir = ({ navigation }) => {
                                     ></Image>
                                 </View>
                             </View>
-                        </View>
+                        </View> */}
                     </View>
                     <View style={kasirStyle.btm_cart}>
                         <View style={kasirStyle.totalhargacart}>
                             <Text>Total Harga</Text>
                             <Text style={kasirStyle.textharga}>
-                                Rp. 3.293.000
+                                <NumberFormat
+                                    value={Wakanai}
+                                    displayType={"text"}
+                                    thousandSeparator={"."}
+                                    decimalSeparator={","}
+                                    prefix={"Rp "}
+                                    renderText={(value) => <Text>{value}</Text>}
+                                />
                             </Text>
                         </View>
                         <TouchableOpacity
                             style={kasirStyle.btncheckout}
                             onPress={() => navigation.navigate("Checkout")}
                         >
-                            <Text>Checkout</Text>
+                            <Text style={kasirStyle.text_btn_checkout}>
+                                Checkout
+                            </Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -647,6 +745,8 @@ const Kasir = ({ navigation }) => {
                             onPress={() => {
                                 setShouldShowModal(!shouldShowModal)
                                 setIncdecValue(1)
+                                setBtnDecrease(false)
+                                setBtnIncrease(false)
                             }}
                         >
                             <View style={kasirStyle.rightheadermodal}>
@@ -703,6 +803,9 @@ const Kasir = ({ navigation }) => {
                                                                 )
                                                                 setJumlahStok(
                                                                     detail_produk.jumlah_produk,
+                                                                )
+                                                                setIDJenisProduk(
+                                                                    detail_produk.id_jenis_produk,
                                                                 )
                                                             }}
                                                         >
@@ -786,8 +889,16 @@ const Kasir = ({ navigation }) => {
                                         <Text
                                             style={kasirStyle.modalproductprice}
                                         >
-                                            {HargaProduk}
-                                            {/* {detail_produk.harga_produk} */}
+                                            <NumberFormat
+                                                value={HargaProduk}
+                                                displayType={"text"}
+                                                thousandSeparator={"."}
+                                                decimalSeparator={","}
+                                                prefix={"Rp "}
+                                                renderText={(value) => (
+                                                    <Text>{value}</Text>
+                                                )}
+                                            />
                                         </Text>
                                     </View>
                                     <Text>Harga Total :</Text>
@@ -795,7 +906,16 @@ const Kasir = ({ navigation }) => {
                                         <Text
                                             style={kasirStyle.modalproductprice}
                                         >
-                                            {TotalHarga}
+                                            <NumberFormat
+                                                value={TotalHarga}
+                                                displayType={"text"}
+                                                thousandSeparator={"."}
+                                                decimalSeparator={","}
+                                                prefix={"Rp "}
+                                                renderText={(value) => (
+                                                    <Text>{value}</Text>
+                                                )}
+                                            />
                                         </Text>
                                     </View>
                                 </View>
@@ -807,6 +927,9 @@ const Kasir = ({ navigation }) => {
                             style={kasirStyle.btnaddtocart}
                             onPress={() => {
                                 HandlerAddToCart()
+                                setBtnDecrease(false)
+                                setBtnIncrease(false)
+                                CartTotalBelanja()
                             }}
                         >
                             <Text style={kasirStyle.textaddtocart}>
